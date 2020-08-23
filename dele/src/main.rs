@@ -1,11 +1,10 @@
 use clap::Clap;
 use std::io;
 use std::path::PathBuf;
-use walkdir::WalkDir;
 
 mod handler;
 
-use handler::{Handler, SimpleHandler};
+use handler::{FSHandler, FileItem, Handler};
 
 #[derive(Clap)]
 #[clap(version = "1.0", author = "koichiro")]
@@ -20,17 +19,16 @@ struct Opts {
 fn main() -> io::Result<()> {
     let opts: Opts = Opts::parse();
 
-    let h = SimpleHandler::new(opts.dir.to_owned(), opts.patterns.to_owned());
-    for entry in WalkDir::new(opts.dir.to_owned()) {
-        let entry = match entry {
-            Ok(e) => e,
-            Err(e) => {
+    let h = FSHandler::new(opts.dir.to_owned(), opts.patterns.to_owned());
+    for entry in h.list_files() {
+        let name = match entry {
+            FileItem::Entry(name) => name,
+            FileItem::Err(e) => {
                 println!("failed to get directory entry, {}", e);
                 continue;
             }
         };
-        let name = entry.path().to_str().unwrap();
-        h.delete_file(name)?;
+        h.delete_file(name.as_str())?;
     }
     Ok(())
 }
