@@ -4,10 +4,21 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
+    environment:
+      REDIS_URL: $REDIS_URL
+      REDIS_PORT: $REDIS_PORT
     ports:
       - "8000:8000"
-    container_name: fastapiexp
+    container_name: fastapiexp_api
     restart: always
+    networks:
+      - fastapiexp
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    restart: always
+    container_name: fastapiexp_redis
     networks:
       - fastapiexp
 

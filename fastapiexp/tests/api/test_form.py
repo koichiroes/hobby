@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from httpx import AsyncClient
 
 from fastapiexp.api.routers.form import COOKIE_KEY
+from fastapiexp.infrastructure.session.redis_store import client
 
 
 def test_send_form(fastapi_test_client: TestClient):
@@ -21,6 +22,9 @@ def test_send_form(fastapi_test_client: TestClient):
     cookies = response.cookies
     cookie = cookies.get(COOKIE_KEY, domain="testserver.local", path="/predict")
     assert cookie
+    stored_value = client.get(cookie)
+    assert stored_value == b"session_id"
+    client.delete(cookie)
 
 
 @pytest.mark.asyncio
@@ -41,3 +45,6 @@ async def test_send_form_with_async(async_test_client: AsyncClient):
     cookies = response.cookies
     cookie = cookies.get(COOKIE_KEY)
     assert cookie
+    stored_value = client.get(cookie)
+    assert stored_value == b"session_id"
+    client.delete(cookie)

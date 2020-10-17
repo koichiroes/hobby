@@ -1,13 +1,14 @@
-from secrets import token_urlsafe
-from typing import Optional
-
-from fastapi import APIRouter, Cookie, Depends, Form, Response
+from fastapi import APIRouter, Depends, Form, Response
 from pydantic import BaseModel
+
+from fastapiexp.application.session import SessionApplication
+from fastapiexp.infrastructure.di_container import di_container
 
 COOKIE_MAX_AGE = 60 * 60
 COOKIE_KEY = "session_id"
 
 router = APIRouter()
+application: SessionApplication = SessionApplication(di_container)
 
 
 class SendForm(BaseModel):
@@ -27,13 +28,12 @@ async def create_send_form(
 @router.post("/send", status_code=204, tags=["send"])
 async def send_personal_info(
     send_form: SendForm = Depends(create_send_form),
-    session_id: Optional[str] = Cookie(None),
 ) -> Response:
-    print(send_form, session_id)
+    session_id = application.store_session(COOKIE_MAX_AGE)
     response = Response(status_code=204)
     response.set_cookie(
         key=COOKIE_KEY,
-        value=token_urlsafe(32),
+        value=session_id,
         max_age=COOKIE_MAX_AGE,
         path="/predict",
         secure=True,
