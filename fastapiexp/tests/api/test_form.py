@@ -20,7 +20,7 @@ def test_send_form(fastapi_test_client: TestClient):
     assert response.status_code == 204
     cookies = response.cookies
     cookie = cookies.get(COOKIE_KEY, domain="testserver.local", path="/predict")
-    assert cookie == "1"
+    assert cookie
 
 
 @pytest.mark.asyncio
@@ -40,4 +40,4 @@ async def test_send_form_with_async(async_test_client: AsyncClient):
     assert response.status_code == 204
     cookies = response.cookies
     cookie = cookies.get(COOKIE_KEY)
-    assert cookie == "1"
+    assert cookie

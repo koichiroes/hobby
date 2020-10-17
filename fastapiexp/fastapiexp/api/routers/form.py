@@ -1,3 +1,4 @@
+from secrets import token_urlsafe
 from typing import Optional
 
 from fastapi import APIRouter, Cookie, Depends, Form, Response
@@ -32,7 +33,7 @@ async def send_personal_info(
     response = Response(status_code=204)
     response.set_cookie(
         key=COOKIE_KEY,
-        value="1",
+        value=token_urlsafe(32),
         max_age=COOKIE_MAX_AGE,
         path="/predict",
         secure=True,
