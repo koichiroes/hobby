@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - "8000:8000"
+    container_name: fastapiexp
+    restart: always
+    networks:
+      - fastapiexp
+
+networks:
+  fastapiexp:
