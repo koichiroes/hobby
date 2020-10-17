@@ -32,6 +32,7 @@ COPY --from=builder /home/app/dist/fastapiexp-0.1.0-py3-none-any.whl /home/app/f
 RUN pip install /home/app/fastapiexp-0.1.0-py3-none-any.whl
 
 COPY start-prod.sh /home/app/
+COPY public /home/app/public
 
 RUN chown -R app:app /home/app
 

@@ -11,7 +11,7 @@ def test_send_form(fastapi_test_client: TestClient):
     Send form data
     """
     response = fastapi_test_client.post(
-        "/form/send",
+        "/api/form/send",
         data={
             "name": "test",
             "email": "test@example.com",
@@ -34,7 +34,7 @@ async def test_send_form_with_async(async_test_client: AsyncClient):
     """
     async with async_test_client as ac:
         response = await ac.post(
-            "/form/send",
+            "/api/form/send",
             data={
                 "name": "test",
                 "email": "test@example.com",

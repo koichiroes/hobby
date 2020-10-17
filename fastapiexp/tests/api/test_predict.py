@@ -10,7 +10,7 @@ def test_predict_classification(fastapi_test_client: TestClient):
     Predict classification
     """
     response = fastapi_test_client.post(
-        "/predict/classification",
+        "/api/predict/classification",
         files={"file": ("test.txt", BytesIO(b"This is test contents."))},
     )
     assert response.status_code == 200
@@ -23,7 +23,7 @@ async def test_predict_classification_with_async(async_test_client: AsyncClient)
     """
     async with async_test_client as ac:
         response = await ac.post(
-            "/predict/classification",
+            "/api/predict/classification",
             files={"file": ("test.txt", BytesIO(b"This is test contents."))},
         )
     assert response.status_code == 200
